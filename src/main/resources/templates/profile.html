@@ -1,9 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>Профиль</title>
+        <title>ЭИОС</title>
     </head>
     <body>
-        <h2>Профиль</h2>
+        <h2>Добро пожаловать, <span th:text="${username}"></span>!</h2>
+        <img th:src="@{'uploads/avatars/'+${avatar}}" alt="foto">
+        <form th:acition="@{/profile/upload}" method="post" enctype="multipart/form-data">
+            <input type="file" name="file">
+            <button type="submit">Изменить аватар</button>
+        </form>
+        
+        <div th:if="${fileError}" style="color:red;">
+            <p th:text="${fileError}"></p>
+        </div>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Выйти из аккаунта</button>
+        </form>
     </body>
 </html>

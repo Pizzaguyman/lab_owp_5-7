@@ -1,10 +1,16 @@
-package com.not_a_team.university;
+package com.not_a_team.university.Controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.not_a_team.university.Entities.User;
+import com.not_a_team.university.Enums.Role;
+import com.not_a_team.university.Misc.RegisterInfoChecker;
+import com.not_a_team.university.Repositories.UserRepository;
+import com.not_a_team.university.Services.UserService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -47,6 +53,6 @@ public class RegisterController {
         User user = new User(username, password, Role.getRoleFromPermLevel(role), session);
         userService.saveUser(user);
 
-        return "profile";
+        return "redirect:/profile";
     }
 }

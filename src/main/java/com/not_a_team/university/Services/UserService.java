@@ -1,4 +1,4 @@
-package com.not_a_team.university;
+package com.not_a_team.university.Services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,9 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.not_a_team.university.Entities.User;
+import com.not_a_team.university.Repositories.UserRepository;
 
 import jakarta.servlet.http.HttpSession;
 

@@ -1,6 +1,15 @@
-package com.not_a_team.university;
+package com.not_a_team.university.Entities;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import com.not_a_team.university.Enums.Role;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +21,8 @@ import jakarta.servlet.http.HttpSession;
 @Entity
 @Table(name = "users")
 public class User {
+    private static String avatarPath = "src\\main\\resources\\static\\uploads\\avatars";
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -19,7 +30,9 @@ public class User {
     private String password;
     private Role role;
     private ArrayList<String> sessions;
+    private String avatar;
 
+    public User() {}
     public User(String name, String password, Role role) {
         this.name = name;
         this.password = password;
@@ -46,6 +59,7 @@ public class User {
     // -- Session management
     // Adding a new session
     public void addSesseion(String sessionId) {
+        System.out.println("Adding session <" + sessionId + "> for " + this.name);
         if (!this.sessions.contains(sessionId))
             this.sessions.add(sessionId);
     }
@@ -61,6 +75,7 @@ public class User {
     }
     // Logout from a session
     public void removeSession(String sessionId) throws NoSessionFound {
+        System.out.println("Removing session <" + sessionId + "> for " + this.name);
         if (this.sessions.contains(sessionId))
             this.sessions.remove(sessionId);
         else
@@ -79,10 +94,10 @@ public class User {
         this.id = newId;
     }
     // name
-    public String getusername() {
+    public String getUsername() {
         return this.name;
     }
-    public void setusername(String newusername) {
+    public void setUsername(String newusername) {
         this.name = newusername;
     }
     // Password
@@ -98,6 +113,30 @@ public class User {
     }
     public void setRole(Role role) {
         this.role = role;
+    }
+    // Avatar
+    public String getAvatar() {
+        System.out.println("Getting avatar from: " + this.avatar);
+        return this.avatar;
+    }
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+    public void setAvatar(MultipartFile file) throws IOException {
+        String originalFileName = file.getOriginalFilename();
+        String fileExtension = "";
+        String fileName = Long.toString(this.id);
+
+        if (file != null && originalFileName.contains("."))
+            fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+        else
+            throw new IOException("Invalid file name");
+
+        Path destinationFile = Paths.get(avatarPath).resolve(fileName + fileExtension);
+        Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
+        System.out.println("Saved avatar to: " + destinationFile.toString());
+
+        this.avatar = fileName + fileExtension;
     }
 
     // Exceptions

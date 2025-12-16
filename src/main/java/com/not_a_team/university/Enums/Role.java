@@ -1,4 +1,4 @@
-package com.not_a_team.university;
+package com.not_a_team.university.Enums;
 
 public enum Role {
     User(0),
