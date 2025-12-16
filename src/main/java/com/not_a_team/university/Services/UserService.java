@@ -22,6 +22,9 @@ public class UserService {
     }
 
     // Manage users
+    public void saveUserAndCommit(User user) {
+        userRepository.saveAndFlush(user);
+    }
     public void saveUser(User user) {
         userRepository.save(user);
     }

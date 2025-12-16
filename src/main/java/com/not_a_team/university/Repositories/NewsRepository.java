@@ -5,10 +5,9 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.not_a_team.university.Entities.User;
+import com.not_a_team.university.Entities.News;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findById(Long id);
-    Optional<User> findByName(String name);
+public interface NewsRepository extends JpaRepository<News, Long> {
+    Optional<News> findById(Long id);
 }

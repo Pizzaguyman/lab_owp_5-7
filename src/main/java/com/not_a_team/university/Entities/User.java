@@ -1,15 +1,12 @@
 package com.not_a_team.university.Entities;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.not_a_team.university.Enums.Role;
+import com.not_a_team.university.Services.FileService;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +18,7 @@ import jakarta.servlet.http.HttpSession;
 @Entity
 @Table(name = "users")
 public class User {
-    private static String avatarPath = "src\\main\\resources\\static\\uploads\\avatars";
+    private static String avatarPath = "static\\uploads\\avatars\\";
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -116,27 +113,16 @@ public class User {
     }
     // Avatar
     public String getAvatar() {
-        System.out.println("Getting avatar from: " + this.avatar);
         return this.avatar;
     }
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
     public void setAvatar(MultipartFile file) throws IOException {
-        String originalFileName = file.getOriginalFilename();
-        String fileExtension = "";
+        if (this.avatar != null)
+            FileService.deleteFile(avatarPath + this.avatar);
         String fileName = Long.toString(this.id);
-
-        if (file != null && originalFileName.contains("."))
-            fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-        else
-            throw new IOException("Invalid file name");
-
-        Path destinationFile = Paths.get(avatarPath).resolve(fileName + fileExtension);
-        Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
-        System.out.println("Saved avatar to: " + destinationFile.toString());
-
-        this.avatar = fileName + fileExtension;
+        this.avatar = FileService.saveFile(file, avatarPath, fileName);
     }
 
     // Exceptions
