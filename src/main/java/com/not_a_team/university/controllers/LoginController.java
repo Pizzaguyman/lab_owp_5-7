@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class LoginController {
+    private final UserService userService;
 
+    public LoginController(UserService us) {
+        this.userService = us;
+    }
     // Show login form
     @GetMapping("/login")
     public String showLoginForm() {
@@ -26,10 +30,15 @@ public class LoginController {
     }
     
     @PostMapping("/register")
-    public String postMethodName(@RequestParam String username, @RequestParam String password, @RequestParam(defaultValue = "User") String role, Model model) {
+    public String register(@RequestParam String username, @RequestParam String password, @RequestParam(defaultValue = "User") String role, Model model) {
+        try {
+            userService.register(username,password,role);
+        } catch (Exception e) {
+            model.addAttribute(e.getMessage(),"error");
+            return "register";
+        }
         
-        
-        return "login";
+        return "redirect:/login";
     }
     
 
